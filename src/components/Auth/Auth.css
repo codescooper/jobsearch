@@ -1,0 +1,15 @@
+.nav-menu-auth {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    list-style-type: none;
+    margin: 0; 
+    padding: 0;
+  }
+.nav-menu-auth > li {
+    margin: 0 15px;
+    padding: 0;
+    text-decoration: none;
+    color: white
+}
