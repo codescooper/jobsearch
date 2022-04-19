@@ -10,6 +10,10 @@ import Contact from './pages/Contact/Contact';
 import Login from './components/Auth/Signin';
 import Signup from './components/Auth/Signup';
 
+import JobApp from './pages/JobApp/JobApp';
+import JobAppHome from './pages/JobApp/Jobs/JobAppHome';
+import Jobs from './pages/JobApp/Jobs/Jobs';
+
 function App() {
   return (
     <div className="App">
@@ -20,6 +24,11 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/Signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
+        <Route path="/app" element={<JobApp />}>
+          <Route path="/app/home" element={<JobAppHome />} />
+          <Route path="/app/jobs" element={<Jobs />} />
+        </Route>
       </Routes>     
     </div>
   );

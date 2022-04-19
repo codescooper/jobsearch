@@ -3,7 +3,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Auth from "./Auth/Auth";
 
+
 export default function Navbar() {
+
+    
+
     return (
         <>
             <header className="App-header">

@@ -1,7 +1,15 @@
-import React, { useRef, useState } from "react";
-import {useNavigate} from "react-router-dom"
+import React, { useRef, useState, useContext } from "react";
+import {useNavigate} from "react-router-dom";
+import { UserContext } from "../../context/userContext";
+import {
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged
+  } from "firebase/auth"
+import {auth} from "../../firebase-config";
 
 export default function Signup() {
+    const signUpUser = useContext(UserContext);
     const navigate = useNavigate();
     const [validation, setValidation] = useState("");
     //Enregistrer les inputs
@@ -10,8 +18,9 @@ export default function Signup() {
         if(el && !inputs.current.includes(el)){
         inputs.current.push(el)
         }
-        console.log(inputs);
     }  
+
+    const formRef = useRef();
 
     // Recuperer les valeurs entré dans le formulaire et les tester 
     const handleForm = async (e) => {
@@ -26,7 +35,7 @@ export default function Signup() {
         }
         try {
           createUser(inputs.current[0].value, inputs.current[1].value);
-          //navigate("/private/private-home")
+        //   navigate("/app/home");
         } catch (err) {
           if(err.code === "auth/invalid-email") {
             setValidation("Email format invalid")
@@ -37,10 +46,23 @@ export default function Signup() {
         }
       }
 
-      const createUser = async (e) => {
-          console.log("creer l'utilisateur : " + inputs.current[0].value);
-          //createUserWithEmailAndPassword(inputs.current[0].value, inputs.current[2].value));
-        }
+    const createUser = async (e) => {
+        console.log("creer l'utilisateur : " + inputs.current[0].value);
+        const cred = await createUserWithEmailAndPassword(
+            auth,
+            inputs.current[0].value,
+            inputs.current[1].value
+        ).then((userCredential) => {
+            // Signed in 
+            console.log(cred);
+            // ...
+          })
+          .catch((error) => {
+              setValidation(error.message)
+            // ..
+          });;
+    
+}
 
     return (
         <>
@@ -52,45 +74,43 @@ export default function Signup() {
                         className="img-fluid" alt="Phone image" />
                     </div>
                     <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                        <form onSubmit={handleForm}>
-                        <div className="form-outline mb-4">
+                        <form className="text-light" onSubmit={handleForm} ref={formRef}>
+                        <div className="form-outline mb-1">
                             <input type="email" ref={addInputs} id="form1Example13" className="form-control form-control-lg" />
                             <label className="form-label" htmlFor="form1Example13">Email address</label>
                         </div>
 
-                        <div className="form-outline mb-4">
+                        <div className="form-outline mb-1">
                             <input type="password" ref={addInputs} id="pw1" className="form-control form-control-lg" />
                             <label className="form-label" htmlFor="form1Example23">Password</label>
                         </div>
 
-                        <div className="form-outline mb-4">
+                        <div className="form-outline mb-1">
                             <input type="password" ref={addInputs} id="pwd2" className="form-control form-control-lg" />
                             <label className="form-label" htmlFor="form1Example23">Repeat Password</label>
                         </div>
 
-                        <div className="d-flex justify-content-around align-items-center mb-4">
-
+                        <div className="d-flex justify-content-around align-items-center mb-1">
                             <div className="form-check">
                             <input className="form-check-input" ref={addInputs} type="checkbox" value="" id="form1Example3" />
                             <label className="form-check-label" htmlFor="form1Example3"> Remember me </label>
                             </div>
                             <a href="#!">Forgot password?</a>
                         </div>
-
-                        <button type="submit" className="btn btn-primary btn-lg btn-block">Sign in</button>
-
-                        <div className="divider d-flex align-items-center my-4">
-                            <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+                        <div>
+                            <p className="text-danger">{ validation }</p>
                         </div>
+                        <button type="submit" className="btn btn-light btn-lg btn-block mb-4">Sign up <i class="bi bi-box-arrow-in-right"></i></button>
 
-                        <a className="btn btn-primary btn-lg btn-block" href="#!"
-                            role="button">
-                            <i className="fab fa-facebook-f me-2"></i>Continue with Facebook
-                        </a>
-                        <a className="btn btn-primary btn-lg btn-block"  href="#!"
-                            role="button">
-                            <i className="fab fa-twitter me-2"></i>Continue with Twitter</a>
                         </form>
+                        <a className="btn btn-light btn-lg btn-block" href="#!"
+                            role="button">
+                            <i className="fab fa-facebook-f me-2"></i>Continue with Facebook <i class="bi bi-facebook"></i> 
+                        </a>
+                        <a className="btn btn-light btn-lg btn-block"  href="#!"
+                            role="button">
+                            <i className="fab fa-twitter me-2"></i>Continue with Google <i class="bi bi-google"></i>
+                        </a>
                     </div>
                     </div>
                 </div>
